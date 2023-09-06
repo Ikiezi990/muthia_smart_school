@@ -1,0 +1,104 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KelasController;
+use App\Http\Controllers\AngkatanController;
+use App\Http\Controllers\TagihanController;
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::post('/kelas', [KelasController::class, 'store']);
+Route::get('/kelas', [KelasController::class, 'index'])->name("kelas.index");
+Route::get('/kelas/{id}/edit', [KelasController::class, 'edit']);
+Route::put('/kelas/{id}', [KelasController::class, 'update']);
+Route::delete('/kelas/{id}', [KelasController::class, 'destroy']);
+
+Route::post('/tagihan', [TagihanController::class, 'store']);
+Route::get('/tagihan', [TagihanController::class, 'index'])->name("Tagihan.index");
+Route::get('/tagihan/{id}/edit', [TagihanController::class, 'edit']);
+Route::put('/tagihan/{id}', [TagihanController::class, 'update']);
+Route::delete('/tagihan/{id}', [TagihanController::class, 'destroy']);
+
+Route::get('/angkatan', [AngkatanController::class, 'index'])->name('angkatan.index');
+Route::post('/angkatan', [AngkatanController::class, 'store'])->name('angkatan.store');
+Route::get('/angkatan/{id}/edit', [AngkatanController::class, 'edit'])->name('angkatan.edit');
+Route::put('/angkatan/{id}', [AngkatanController::class, 'update'])->name('angkatan.update');
+Route::delete('/angkatan/{id}', [AngkatanController::class, 'destroy'])->name('angkatan.destroy');
+
+
+use App\Http\Controllers\JurusanController;
+
+Route::get('/jurusan', [JurusanController::class, 'index'])->name('jurusan.index');
+Route::post('/jurusan', [JurusanController::class, 'store']);
+Route::get('/jurusan/{id}/edit', [JurusanController::class, 'edit']);
+Route::put('/jurusan/{id}', [JurusanController::class, 'update']);
+Route::delete('/jurusan/{id}', [JurusanController::class, 'destroy']);
+
+use App\Http\Controllers\SiswaController;
+
+Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
+Route::post('/siswa', [SiswaController::class, 'store']);
+Route::get('/siswa/{id}', [SiswaController::class, 'show']);
+Route::get('/siswa/{id}/edit', [SiswaController::class, 'edit']);
+Route::put('/siswa/{id}', [SiswaController::class, 'update']);
+Route::delete('/siswa/{id}', [SiswaController::class, 'destroy']);
+
+use App\Http\Controllers\MapelController;
+
+Route::prefix('mapel')->group(function () {
+    Route::get('/', [MapelController::class, 'index'])->name('mapel.index');
+    Route::post('/', [MapelController::class, 'store'])->name('mapel.store');
+    Route::get('/{id}/edit', [MapelController::class, 'edit'])->name('mapel.edit');
+    Route::put('/{id}', [MapelController::class, 'update'])->name('mapel.update');
+    Route::delete('/{id}', [MapelController::class, 'destroy'])->name('mapel.destroy');
+});
+
+use App\Http\Controllers\GuruController;
+
+Route::group(['prefix' => 'guru'], function () {
+    Route::get('/', [GuruController::class, 'index'])->name('guru.index');
+    Route::post('/', [GuruController::class, 'store'])->name('guru.store');
+    Route::get('/{id}/edit', [GuruController::class, 'edit'])->name('guru.edit');
+    Route::put('/{id}', [GuruController::class, 'update'])->name('guru.update');
+    Route::delete('/{id}', [GuruController::class, 'destroy'])->name('guru.destroy');
+});
+
+use App\Http\Controllers\TabunganController;
+
+Route::group(['prefix' => 'tabungan'], function () {
+    Route::get('/create', [TabunganController::class, 'create'])->name('tabungan.create');
+    Route::get('/', [TabunganController::class, 'index'])->name('tabungan.index');
+    Route::get('/{siswaId}', [TabunganController::class, 'show'])->name('tabungan.show');
+    Route::post('/', [TabunganController::class, 'store'])->name('tabungan.store');
+    Route::get('/{tabunganId}/edit', [TabunganController::class, 'edit'])->name('tabungan.edit');
+    Route::put('/{tabunganId}', [TabunganController::class, 'update'])->name('tabungan.update');
+    Route::delete('/{tabunganId}', [TabunganController::class, 'destroy'])->name('tabungan.destroy');
+});
+
+use App\Http\Controllers\UserController;
+
+Route::resource('users', UserController::class);
+
+use App\Http\Controllers\JadwalController;
+
+Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store');
+Route::get('/jadwal/{id}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
+Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
+Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
