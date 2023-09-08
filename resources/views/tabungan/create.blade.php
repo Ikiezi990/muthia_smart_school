@@ -19,4 +19,30 @@
         </form>
     </div>
 </div>
+<script>
+    // Ambil elemen-elemen yang dibutuhkan
+    const tagihanDropdown = document.getElementById('tagihan_id');
+    const nominalInput = document.getElementById('nominal');
+
+    // Daftar tagihan dan nominal yang sesuai
+    const tagihanData = {
+        json_encode($tagihanData);
+    };
+
+    // Event listener untuk perubahan pada dropdown tagihan
+    tagihanDropdown.addEventListener('change', function() {
+        // Dapatkan ID tagihan yang dipilih
+        const selectedTagihanId = this.value;
+
+        // Temukan tagihan yang sesuai dalam data tagihan
+        const selectedTagihan = tagihanData.find(tagihan => tagihan.id == selectedTagihanId);
+
+        // Set nilai input nominal sesuai dengan tagihan yang dipilih
+        if (selectedTagihan) {
+            nominalInput.value = selectedTagihan.nominal;
+        } else {
+            nominalInput.value = ''; // Kosongkan nilai jika tagihan tidak ditemukan
+        }
+    });
+</script>
 @endsection

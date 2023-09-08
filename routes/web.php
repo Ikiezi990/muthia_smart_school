@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsensiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\AngkatanController;
@@ -16,7 +17,7 @@ use App\Http\Controllers\TagihanController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -102,3 +103,23 @@ Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store')
 Route::get('/jadwal/{id}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
 Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
 Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
+
+use App\Http\Controllers\TransaksiController;
+
+Route::get('/transaksi', [TransaksiController::class, 'showKelas'])->name('transaksi.kelas');
+Route::get('/transaksi/siswa/{kelasId}', [TransaksiController::class, 'showSiswa'])->name('transaksi.siswa');
+Route::get('/transaksi/tagihan/{siswaId}', [TransaksiController::class, 'showTagihan'])->name('transaksi.tagihan');
+Route::get('/transaksi/create/{siswaId}', [TransaksiController::class, 'createTransaksi'])->name('transaksi.create');
+Route::post('/transaksi/store', [TransaksiController::class, 'storeTransaksi'])->name('transaksi.store');
+
+
+Route::get('/about', function () {
+    return view('about');
+});
+Route::get('/profile', function () {
+    return view('profile');
+});
+
+Route::get('/absensi/guru/index', [AbsensiController::class, 'index'])->name('absensi.guru.index');
+Route::get('/absensi/guru/detail/{kelasId}/{jadwalId}', [AbsensiController::class, 'list_absen'])->name('absensi.guru.detail');
+Route::post('/absensi/guru/detail/{kelasId}/{jadwalId}', [AbsensiController::class, 'storeBulk'])->name('absensi.storeBulk');

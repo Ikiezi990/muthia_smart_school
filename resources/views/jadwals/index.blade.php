@@ -123,7 +123,6 @@
             });
         }
 
-        getJadwalList();
 
         $('#refreshPage').click(function() {
             location.reload();
@@ -257,6 +256,8 @@
             var searchQuery = $(this).val().toLowerCase();
             filterJadwals(searchQuery);
         });
+        getJadwalList();
+
     });
 </script>
 

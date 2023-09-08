@@ -43,10 +43,17 @@
 
         @if (!in_array(Request::path(), ['login', 'register']))
         <div id="footer-bar" class="footer-bar-5">
-            <a href="{{ route('home') }}" class="active-nav"><i class="fas fa-home"></i><span>Home</span></a>
-            <a href="#"><i class="fas fa-info"></i><span>About</span></a>
-            <a href="#"><i class="fas fa-cog"></i><span>Settings</span></a>
+            <a href="{{ route('home') }}" class="{{ Request::is('home*') ? 'active-nav' : '' }}">
+                <i class="fas fa-home"></i><span>Home</span>
+            </a>
+            <a href="{{ url('/about') }}" class="{{ Request::is('about*') ? 'active-nav' : '' }}">
+                <i class="fas fa-info"></i><span>About</span>
+            </a>
+            <a href="{{ url('/profile') }}" class="{{ Request::is('profile*') ? 'active-nav' : '' }}">
+                <i class="fas fa-cog"></i><span>Settings</span>
+            </a>
         </div>
+
 
         @endif
 

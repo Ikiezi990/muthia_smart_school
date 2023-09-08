@@ -12,6 +12,7 @@ class CreateJadwalsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('guru_id');
             $table->unsignedBigInteger('kelas_id');
+            $table->unsignedBigInteger('mapel_id');
             $table->string('semester');
             $table->string('tahun_ajaran');
             $table->string('hari');
@@ -20,6 +21,7 @@ class CreateJadwalsTable extends Migration
             $table->timestamps();
 
             $table->foreign('guru_id')->references('id')->on('gurus');
+            $table->foreign('mapel_id')->references('id')->on('mapels');
             $table->foreign('kelas_id')->references('id')->on('kelas');
         });
     }

@@ -9,4 +9,18 @@ class TransaksiTagihan extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class);
+    }
+
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class);
+    }
+
+    public function tagihan()
+    {
+        return $this->belongsTo(Tagihan::class);
+    }
 }
