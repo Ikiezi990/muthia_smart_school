@@ -32,20 +32,23 @@
                     <button type="button" id="login-btn" class="btn btn-primary btn-block">
                         {{ __('Login') }}
                     </button>
+                    <p class="mt-3 mb-0 text-center">Belum memiliki akun? <a href="{{ route('register') }}">Daftar di sini</a></p>
                 </div>
             </div>
-            <div class="form-group row">
-                <div class="col-md-6 offset-md-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} checked style="visibility: hidden;">
-                        <label class="form-check-label" for="remember" style="visibility: hidden;">
-                            {{ __('Remember Me') }}
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </form>
+
     </div>
+    <div class="form-group row">
+        <div class="col-md-6 offset-md-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} checked style="visibility: hidden;">
+                <label class="form-check-label" for="remember" style="visibility: hidden;">
+                    {{ __('Remember Me') }}
+                </label>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
 </div>
 
 <script>
@@ -76,6 +79,7 @@
                     });
                 },
                 error: function(xhr) {
+                    console.log(xhr);
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
                         var errorMessages = [];

@@ -13,16 +13,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="manifest" href="_manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
     <link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <!-- Include SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Include jQuery (if not included already) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Include SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.js"></script>
-
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js"></script>
 </head>
 
 <body class="theme-light" data-highlight="blue2">
@@ -41,7 +44,7 @@
 
         </div>
 
-        @if (!in_array(Request::path(), ['login', 'register']))
+        @if (!in_array(Request::path(), ['login', 'register', '/']))
         <div id="footer-bar" class="footer-bar-5">
             <a href="{{ route('home') }}" class="{{ Request::is('home*') ? 'active-nav' : '' }}">
                 <i class="fas fa-home"></i><span>Home</span>
@@ -71,7 +74,7 @@
             </div> -->
             <!-- Header bar -->
 
-            <div class="scrollable">
+            <div class="scrollable" style="padding-bottom: 50px;">
                 @yield('content')
 
             </div>
@@ -94,6 +97,7 @@
     <script type="text/javascript" src="{{asset('templates/scripts/jquery.js')}}"></script>
     <script type="text/javascript" src="{{asset('templates/scripts/bootstrap.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('templates/scripts/custom.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 </body>
 
 </html>

@@ -13,6 +13,7 @@ class Jadwal extends Model
         'tahun_ajaran',
         'hari',
         'jam',
+        'mapel_id'
     ];
 
     public function guru()
@@ -27,5 +28,9 @@ class Jadwal extends Model
     public function mapel()
     {
         return $this->belongsTo(Mapel::class);
+    }
+    public function siswas()
+    {
+        return $this->belongsToMany(siswa::class, 'jadwal_siswa', 'jadwal_id', 'siswa_id');
     }
 }

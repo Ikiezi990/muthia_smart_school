@@ -10,14 +10,14 @@ class SiswaController extends Controller
 {
     public function index()
     {
-        $siswas = Siswa::all();
+        $siswas = siswa::all();
         $kelas = Kelas::all();
         return view('siswa.index', compact('siswas', 'kelas'));
     }
 
     public function show($id)
     {
-        $siswa = Siswa::findOrFail($id);
+        $siswa = siswa::findOrFail($id);
         $kelas = Kelas::where('id', $siswa->kelas_id)->first();
         $siswa["kelas"] = $kelas->nama_kelas;
         return response()->json($siswa);
@@ -36,13 +36,13 @@ class SiswaController extends Controller
             'alamat' => 'required',
         ]);
 
-        Siswa::create($request->all());
+        siswa::create($request->all());
         return response()->json(['success' => true]);
     }
 
     public function edit($id)
     {
-        $siswa = Siswa::findOrFail($id);
+        $siswa = siswa::findOrFail($id);
         return response()->json($siswa);
     }
 
@@ -58,14 +58,14 @@ class SiswaController extends Controller
             'alamat' => 'required',
         ]);
 
-        $siswa = Siswa::findOrFail($id);
+        $siswa = siswa::findOrFail($id);
         $siswa->update($request->all());
         return response()->json(['success' => true]);
     }
 
     public function destroy($id)
     {
-        Siswa::destroy($id);
+        siswa::destroy($id);
         return response()->json(['success' => true]);
     }
 }

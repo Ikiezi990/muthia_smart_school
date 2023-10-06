@@ -12,7 +12,7 @@ class TransaksiController extends Controller
 {
     public function index($siswaId)
     {
-        $siswa = Siswa::find($siswaId);
+        $siswa = siswa::find($siswaId);
         $tagihan = Tagihan::where('siswa_id', $siswaId)->get();
         $transaksi = TransaksiTagihan::where('siswa_id', $siswaId)->get();
 
@@ -28,20 +28,20 @@ class TransaksiController extends Controller
     public function showSiswa($kelasId)
     {
         $kelas = Kelas::find($kelasId);
-        $siswa = Siswa::where('kelas_id', $kelasId)->get();
+        $siswa = siswa::where('kelas_id', $kelasId)->get();
         return view('transaksi.siswa', compact('kelas', 'siswa'));
     }
 
     public function showTagihan($siswaId)
     {
-        $siswa = Siswa::find($siswaId);
+        $siswa = siswa::find($siswaId);
         $tagihan = TransaksiTagihan::with('tagihan')->where('siswa_id', $siswaId)->get()->groupBy('tagihan_id');
         return view('transaksi.tagihan', compact('siswa', 'tagihan'));
     }
 
     public function createTransaksi($siswaId)
     {
-        $siswa = Siswa::find($siswaId);
+        $siswa = siswa::find($siswaId);
         $tagihan = Tagihan::where('kelas_id', $siswa->kelas_id)->get();
 
         return view('transaksi.create', compact('siswa', 'tagihan'));
@@ -66,7 +66,7 @@ class TransaksiController extends Controller
     public function editTransaksi($transaksiId)
     {
         $transaksi = TransaksiTagihan::find($transaksiId);
-        $siswa = Siswa::find($transaksi->siswa_id);
+        $siswa = siswa::find($transaksi->siswa_id);
         $tagihan = Tagihan::where('siswa_id', $transaksi->siswa_id)->get();
 
         return view('transaksi.edit', compact('siswa', 'tagihan', 'transaksi'));

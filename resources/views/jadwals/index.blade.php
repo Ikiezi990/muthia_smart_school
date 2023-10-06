@@ -14,6 +14,29 @@
 
         <div class="scrollable">
             <ul class="list-unstyled" id="jadwalList">
+                @foreach ($jadwal as $jadwal)
+                <li class="mb-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="font-14 font-600 mb-1">Jam: {{ $jadwal->jam }}</h6>
+                            <p class="opacity-60 font-10 mb-0">Hari: {{ $jadwal->hari }}</p>
+                            <p class="opacity-60 font-10 mb-0">Hari: {{ $jadwal->mapel->nama_mapel }}</p>
+                            <p class="opacity-60 font-10 mb-0">Kelas: {{ $jadwal->kelas->nama_kelas }}</p>
+                            <p class="opacity-60 font-10 mb-0">Guru: {{ $jadwal->guru->nama }}</p>
+                            <p class="opacity-60 font-10 mb-0">Tahun Ajaran: {{ $jadwal->tahun_ajaran }}</p>
+                            <p class="opacity-60 font-10 mb-0">Semester: {{ $jadwal->semester }}</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-info edit" data-id="{{ $jadwal->id }}">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger delete" data-id="{{ $jadwal->id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                @endforeach
             </ul>
         </div>
     </div>
@@ -62,6 +85,16 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="kelas_id">Mapel:</label>
+                    <select class="form-control" id="mapel_id" name="mapel_id" required>
+                        <option value="">Pilih Mapel</option>
+                        @foreach ($mapel as $mapelItem)
+                        <option value="{{ $mapelItem->id }}">{{ $mapelItem->nama_mapel }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="semester">Semester:</label>
                     <select class="form-control" id="semester" name="semester" required>
@@ -86,42 +119,6 @@
 </div>
 <script>
     $(document).ready(function() {
-        function getJadwalList() {
-            $.ajax({
-                url: '/jadwal',
-                method: 'GET',
-                success: function(data) {
-
-                    $('#jadwalList').empty();
-
-
-                    $.each(data, function(index, jadwal) {
-                        var listItem = '<li class="mb-3">' +
-                            '<div class="d-flex align-items-center justify-content-between">' +
-                            '<div>' +
-                            '<h6 class="font-14 font-600 mb-1">Jam: ' + jadwal.jam + '</h6>' +
-                            '<p class="opacity-60 font-10 mb-0">Hari: ' + jadwal.hari + '</p>' +
-                            '<p class="opacity-60 font-10 mb-0">Kelas: ' + jadwal.kelas.nama_kelas + '</p>' +
-                            '<p class="opacity-60 font-10 mb-0">Guru: ' + jadwal.guru.nama_guru + '</p>' +
-                            '<p class="opacity-60 font-10 mb-0">Tahun Ajaran: ' + jadwal.tahun_ajaran + '</p>' +
-                            '<p class="opacity-60 font-10 mb-0">Semester: ' + jadwal.semester + '</p>' +
-                            '</div>' +
-                            '<div>' +
-                            '<button class="btn btn-info edit" data-id="' + jadwal.id + '">' +
-                            '<i class="fa fa-edit"></i>' +
-                            '</button>' +
-                            '<button class="btn btn-danger delete" data-id="' + jadwal.id + '">' +
-                            '<i class="fa fa-trash"></i>' +
-                            '</button>' +
-                            '</div>' +
-                            '</div>' +
-                            '</li>';
-
-                        $('#jadwalList').append(listItem);
-                    });
-                }
-            });
-        }
 
 
         $('#refreshPage').click(function() {
@@ -135,6 +132,7 @@
             $('#guru_id').val('');
             $('#tahun_ajaran').val('');
             $('#semester').val('');
+            $('#mapel_id').val('');
             $('.modal').css('display', 'block');
         });
 
@@ -170,7 +168,9 @@
             var guru_id = $('#guru_id').val();
             var tahun_ajaran = $('#tahun_ajaran').val();
             var semester = $('#semester').val();
+            var mapel_id = $('#mapel_id').val();
             var url = id ? '/jadwal/' + id : '/jadwal';
+            console.log(mapel_id);
 
             $.ajax({
                 url: url,
@@ -182,7 +182,8 @@
                     kelas_id: kelas_id,
                     guru_id: guru_id,
                     tahun_ajaran: tahun_ajaran,
-                    semester: semester
+                    semester: semester,
+                    mapel_id: mapel_id
                 },
                 success: function(data) {
                     if (data.success) {
@@ -256,7 +257,6 @@
             var searchQuery = $(this).val().toLowerCase();
             filterJadwals(searchQuery);
         });
-        getJadwalList();
 
     });
 </script>

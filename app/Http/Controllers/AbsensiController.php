@@ -8,6 +8,7 @@ use App\Models\Jadwal;
 use App\Models\Kelas;
 use App\Models\siswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AbsensiController extends Controller
 {
@@ -47,7 +48,7 @@ class AbsensiController extends Controller
      */
     public function list_absen($kelasId, $jadwalId)
     {
-        $absensi = Absensi::where('jadwal_id', $jadwalId)->count();
+        $absensi = Absensi::where(['jadwal_id' => $jadwalId, "tanggal_absensi" => date("Y-m-d")])->count();
         if ($absensi <= 0) {
             $siswa = siswa::where('kelas_id', $kelasId)->get();
             return view('menuguru.absensi.detail', ['jadwal_id' => $jadwalId, 'siswa' => $siswa]);
@@ -134,5 +135,93 @@ class AbsensiController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function historyAbsensiTanggal()
+    {
+        $guru = Guru::where('nip', auth()->user()->reference_id)->first();
+        $jadwal = Jadwal::where('guru_id', $guru->id)->get();
+        return view("menuguru.absensi.historytanggal", ["jadwal" => $jadwal]);
+    }
+    public function historyAbsensiTanggalSiswa()
+    {
+        $siswa = siswa::where('nisn', auth()->user()->reference_id)->first();
+        $jadwal = Jadwal::where('kelas_id', $siswa->kelas_id)->get();
+        return view("menusiswa.absensi.historytanggal", ["jadwal" => $jadwal]);
+    }
+    public function getStudentAttendance(Request $request)
+    {
+        // Retrieve filter parameters from the AJAX request
+        $jadwal_id = $request->input('jadwal_id');
+
+        $tanggal_awal = $request->input('tanggal_awal');
+        $tanggal_akhir = $request->input('tanggal_akhir');
+        $jadwal = Jadwal::where('id', $jadwal_id)->first();
+        // Query to retrieve students based on kelas_id from the jadwal table
+        $students = siswa::where('kelas_id', $jadwal->kelas_id)->get();
+
+
+        // Initialize an array to store student data
+        $studentData = [];
+
+        // Loop through each student and calculate their attendance counts
+        foreach ($students as $student) {
+            $attendanceStatus = $student->absensi()
+                ->where('jadwal_id', $jadwal_id)
+                ->whereBetween('tanggal_absensi', [$tanggal_awal, $tanggal_akhir])
+                ->groupBy('status')
+                ->select('status', DB::raw('count(*) as count'))
+                ->pluck('count', 'status')->toArray();
+
+            // Create an array with student data
+            $studentData[] = [
+                'nama_lengkap' => $student->nama_lengkap,
+                'nisn' => $student->nisn,
+                'hadir' => $attendanceStatus['Hadir'] ?? 0,
+                'alpa' => $attendanceStatus['Alpa'] ?? 0,
+                'izin' => $attendanceStatus['Izin'] ?? 0,
+                'sakit' => $attendanceStatus['Sakit'] ?? 0,
+            ];
+        }
+
+        // Return the student data as JSON
+        return response()->json($studentData);
+    }
+    public function getStudentAttendanceSiswa(Request $request)
+    {
+        // Retrieve filter parameters from the AJAX request
+        $jadwal_id = $request->input('jadwal_id');
+
+        $tanggal_awal = $request->input('tanggal_awal');
+        $tanggal_akhir = $request->input('tanggal_akhir');
+        $jadwal = Jadwal::where('id', $jadwal_id)->first();
+        // Query to retrieve students based on kelas_id from the jadwal table
+        $students = siswa::where('nisn', auth()->user()->reference_id)->get();
+
+
+        // Initialize an array to store student data
+        $studentData = [];
+
+        // Loop through each student and calculate their attendance counts
+        foreach ($students as $student) {
+            $attendanceStatus = $student->absensi()
+                ->where('jadwal_id', $jadwal_id)
+                ->whereBetween('tanggal_absensi', [$tanggal_awal, $tanggal_akhir])
+                ->groupBy('status')
+                ->select('status', DB::raw('count(*) as count'))
+                ->pluck('count', 'status')->toArray();
+
+            // Create an array with student data
+            $studentData[] = [
+                'nama_lengkap' => $student->nama_lengkap,
+                'nisn' => $student->nisn,
+                'hadir' => $attendanceStatus['Hadir'] ?? 0,
+                'alpa' => $attendanceStatus['Alpa'] ?? 0,
+                'izin' => $attendanceStatus['Izin'] ?? 0,
+                'sakit' => $attendanceStatus['Sakit'] ?? 0,
+            ];
+        }
+
+        // Return the student data as JSON
+        return response()->json($studentData);
     }
 }

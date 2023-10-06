@@ -10,13 +10,13 @@ class TabunganController extends Controller
 {
     public function index()
     {
-        $siswas = Siswa::all();
+        $siswas = siswa::all();
         return view('tabungan.index', compact('siswas'));
     }
 
     public function show($id)
     {
-        $siswa = Siswa::findOrFail($id);
+        $siswa = siswa::findOrFail($id);
         $tabungans = Tabungan::where('siswa_id', $id)->get();
         $totalTabungan = $tabungans->sum('nominal');
 
@@ -26,7 +26,7 @@ class TabunganController extends Controller
 
     public function create(Request $request)
     {
-        $siswa = Siswa::findOrFail($request->siswa_id);
+        $siswa = siswa::findOrFail($request->siswa_id);
         return view('tabungan.create', compact('siswa'));
     }
 

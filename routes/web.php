@@ -19,6 +19,9 @@ use App\Http\Controllers\TagihanController;
 Route::get('/', function () {
     return view('auth.login');
 });
+Route::get('/tagihan-siswa', function () {
+    return view('menusiswa.tagihan');
+});
 
 Auth::routes();
 
@@ -119,7 +122,47 @@ Route::get('/about', function () {
 Route::get('/profile', function () {
     return view('profile');
 });
+Route::get('/tabungansiswa', function () {
+    return view('menusiswa.tabungan.index');
+});
 
 Route::get('/absensi/guru/index', [AbsensiController::class, 'index'])->name('absensi.guru.index');
 Route::get('/absensi/guru/detail/{kelasId}/{jadwalId}', [AbsensiController::class, 'list_absen'])->name('absensi.guru.detail');
 Route::post('/absensi/guru/detail/{kelasId}/{jadwalId}', [AbsensiController::class, 'storeBulk'])->name('absensi.storeBulk');
+Route::get('/absensi/guru/tanggal', [AbsensiController::class, 'historyAbsensiTanggal'])->name('absensi.tanggal');
+Route::get('/absensi/siswa/tanggal', [AbsensiController::class, 'historyAbsensiTanggalSiswa'])->name('absensi.tanggal.siswa');
+Route::post('/get-student-attendance', [AbsensiController::class, 'getStudentAttendance'])->name('student.attendance');
+Route::post('/get-student-attendance-siswa', [AbsensiController::class, 'getStudentAttendanceSiswa'])->name('student.attendance.siswa');
+Route::post('/get-student-attendance-siswa', [AbsensiController::class, 'getStudentAttendanceSiswa'])->name('student.attendance.siswa');
+
+use App\Http\Controllers\KinerjaController;
+use App\Http\Controllers\KinerjaSiswaController;
+use App\Http\Controllers\SuratController;
+
+// List Kinerja records
+Route::get('/kinerja', [KinerjaController::class, 'index'])->name('kinerja.index');
+
+// Show the create Kinerja form
+Route::get('/kinerja/create', [KinerjaController::class, 'create'])->name('kinerja.create');
+
+// Store a new Kinerja record
+Route::post('/kinerja', [KinerjaController::class, 'store'])->name('kinerja.store');
+
+// Show the edit Kinerja form
+Route::get('/kinerja/{id}/edit', [KinerjaController::class, 'edit'])->name('kinerja.edit');
+
+// Update an existing Kinerja record
+Route::put('/kinerja/{id}', [KinerjaController::class, 'update'])->name('kinerja.update');
+
+// Delete a Kinerja record
+Route::delete('/kinerja/{id}', [KinerjaController::class, 'destroy'])->name('kinerja.destroy');
+
+Route::get('/kinerja-siswa', [KinerjaSiswaController::class, 'index'])->name('kinerja-siswa.index');
+Route::get('/kinerja-siswa/{id}/edit', [KinerjaSiswaController::class, 'edit'])->name('kinerja-siswa.edit');
+Route::get('/kinerja-siswa/{id}', [KinerjaSiswaController::class, 'show'])->name('kinerja-siswa.show');
+Route::post('/kinerja-siswa', [KinerjaSiswaController::class, 'store'])->name('kinerja-siswa.store');
+Route::put('/kinerja-siswa/{id}', [KinerjaSiswaController::class, 'update'])->name('kinerja-siswa.update');
+Route::delete('/kinerja-siswa/{id}', [KinerjaSiswaController::class, 'destroy'])->name('kinerja-siswa.destroy');
+
+Route::resource('surat', SuratController::class);
+Route::get('/surat/{id}/download', [SuratController::class, 'download'])->name('surat.download');

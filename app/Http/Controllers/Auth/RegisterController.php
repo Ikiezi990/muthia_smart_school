@@ -53,8 +53,10 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'refrence_id' => ['required', 'string', 'exists_in_siswa_or_guru'], // Custom rule
         ]);
     }
+
 
     /**
      * Create a new user instance after a valid registration.
@@ -64,10 +66,33 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+
+        $refrenceId = $data['refrence_id'];
+
+        // Check if refrence_id exists in the 'siswa' table
+        $siswa = \App\Models\Siswa::where('nisn', $refrenceId)->first();
+
+        // Check if refrence_id exists in the 'guru' table
+        $guru = \App\Models\Guru::where('nip', $refrenceId)->first();
+
+        if ($siswa) {
+            // If refrence_id exists in 'siswa' table, create a user with role 'siswa'
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'is_admin' => "siswa", // Set 'is_admin' to false for non-admin users
+                'reference_id' => $refrenceId, // Set the reference_id
+            ]);
+        } elseif ($guru) {
+            // If refrence_id exists in 'guru' table, create a user with role 'guru'
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'is_admin' => "guru", // Set 'is_admin' to true for admin users
+                'reference_id' => $refrenceId, // Set the reference_id
+            ]);
+        }
     }
 }
